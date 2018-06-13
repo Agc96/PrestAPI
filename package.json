@@ -1,0 +1,33 @@
+{
+  "name": "prestapi",
+  "version": "1.0.0",
+  "description": "RESTful API for Prest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agc96/PrestAPI.git"
+  },
+  "keywords": [
+    "prest",
+    "api",
+    "rest"
+  ],
+  "author": "William Pérez, Anthony Gutiérrez, Miguel Romero, Christian Oliva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Agc96/PrestAPI/issues"
+  },
+  "homepage": "https://github.com/Agc96/PrestAPI#readme",
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "express": "^4.16.3",
+    "pg": "^7.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
+}
