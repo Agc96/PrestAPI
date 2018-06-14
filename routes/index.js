@@ -1,24 +1,14 @@
-const db = require('../database');
-
+const university = require('./university');
+const career = require('./career');
 const user = require('./user');
 const course = require('./course');
 
 module.exports = function (app) {
 
 	// Obtener lista de universidades
-	app.get('/university', (req, res, next) => {
-		db.query('SELECT (id_university, name) FROM prest.university WHERE active = TRUE', (err, result) => {
-			if (err) return next(err);
-			res.send(result.rows);
-		});
-	});
+	app.get('/university', university.get);
 	// Obtener lista de carreras
-	app.get('/career', (req, res, next) => {
-		db.query('SELECT (id_career, name) FROM prest.career WHERE active = TRUE', (err, result) => {
-			if (err) return next(err);
-			res.send(result.rows);
-		});
-	});
+	app.get('/career', career.get);
 
 	// Crear usuario
 	app.post('/user/create', user.create);
