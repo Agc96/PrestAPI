@@ -30,7 +30,8 @@ module.exports = {
 			if (err) return next(err);
 			try {
 				bcrypt.compare(password, result.rows[0].password, function (err, result) {
-					res.status(200).send('OK');
+					if (!err && result) res.status(200).send('OK');
+					else res.status(403).send('Correo o contraseña incorrectos.');
 				});
 			} catch (e) {
 				res.status(403).send('Correo o contraseña incorrectos.');

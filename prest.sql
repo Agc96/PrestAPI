@@ -22,6 +22,12 @@ CREATE TABLE pucp.user(
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+-- TODO: Reemplazar los puntos suspensivos por un hash generado por bcrypt con 10 salt rounds
+INSERT INTO pucp.user (name, email, password) VALUES ('Anthony Gutiérrez', 'anthony.gutierrez@pucp.pe', ...);
+INSERT INTO pucp.user (name, email, password) VALUES ('William Pérez', 'wperezp@pucp.pe', ...);
+INSERT INTO pucp.user (name, email, password) VALUES ('Christian Oliva', 'christian.oliva@pucp.pe', ...);
+INSERT INTO pucp.user (name, email, password) VALUES ('Miguel Romero', 'miguel.romero@pucp.pe', ...);
+
 CREATE TABLE prest.career(
 	id_career SERIAL PRIMARY KEY,
 	name VARCHAR NOT NULL,
