@@ -1,0 +1,24 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: Roboto, BlinkMacSystemFont, -apple-system, Segoe UI, Oxygen, Ubuntu,
+		Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.header {
+	background-color: #006064;
+	margin: 0;
+	padding: 1rem;
+}
+.header .title {
+	color: #ffffff;
+	font-style: italic;
+	font-size: 1.5rem;
+}
+.container {
+	padding: 1rem;
+	text-align: center;
+}
+.error {
+	font-size: 6rem;
+	margin-bottom: 1rem;
+}

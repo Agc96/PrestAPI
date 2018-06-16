@@ -15,14 +15,14 @@ INSERT INTO prest.career (name) VALUES ('Ingeniería Electrónica');
 ----------------------------------------------------------------------------------------------
 -- TODO: Reemplazar los puntos suspensivos por un hash generado por bcrypt con 10 salt rounds
 ----------------------------------------------------------------------------------------------
-INSERT INTO pucp.user (name, id_career, email, password) VALUES ('Anthony Gutiérrez', 2,
-	'anthony.gutierrez@pucp.pe', ...);
-INSERT INTO pucp.user (name, id_career, email, password) VALUES ('William Pérez', 3,
-	'wperezp@pucp.pe', ...);
-INSERT INTO pucp.user (name, id_career, email, password) VALUES ('Christian Oliva', 1,
-	'christian.oliva@pucp.pe', ...);
-INSERT INTO pucp.user (name, id_career, email, password) VALUES ('Miguel Romero', 4,
-	'miguel.romero@pucp.pe', ...);
+INSERT INTO pucp.user (name, email, password, active) VALUES ('Anthony Gutiérrez', 'anthony.gutierrez@pucp.pe',
+	'$2b$10$5.u4kDdjTUaFts9XDCB5su6IKq9dJP/i0nW4xnzLK22OQSmDfRPEO', TRUE);
+INSERT INTO pucp.user (name, email, password, active) VALUES ('William Pérez', 'wperezp@pucp.pe',
+	'$2b$10$k2ZNvigWaltS4ldH2vjyUOR/VUNL9Rl/dWYPMwsgV1K43hrcigrku', TRUE);
+INSERT INTO pucp.user (name, email, password, active) VALUES ('Christian Oliva', 'christian.oliva@pucp.pe',
+	'$2b$10$W6JFODLLzgGnYb4/nMAYSuz6YRzm/nIVxaOl1t7MCsgr19ymBDkJi', TRUE);
+INSERT INTO pucp.user (name, email, password, active) VALUES ('Miguel Romero', 'miguel.romero@pucp.pe',
+	'$2b$10$7s0egBDjcWazhkQklb0fpesOnv.l9AQ440OY/V/SGNGw7xmQnrmri', TRUE);
 
 -- Cursos generales para Ingeniería
 INSERT INTO pucp.course(name, code) VALUES ('Fundamentos de Cálculo', '1MAT05');
@@ -35,7 +35,7 @@ INSERT INTO pucp.course(name, code) VALUES ('Física 1', '1FIS02');
 INSERT INTO pucp.course(name, code) VALUES ('Física 2', '1FIS04');
 INSERT INTO pucp.course(name, code) VALUES ('Física 3', '1FIS06');
 -- Cursos que dependen de la carrera
-INSERT INTO pucp.course(name, code) VALUES ('Técnicas de Programación', 'INF144');
+INSERT INTO pucp.course(name, code) VALUES ('Técnicas de Programación', 'INF144'); -- 2, 2,10
 INSERT INTO pucp.course(name, code) VALUES ('Mecánica para Ingenieros', 'ING134');
 INSERT INTO pucp.course(name, code) VALUES ('Estática', 'ING135');
 
@@ -101,3 +101,11 @@ INSERT INTO pucp.student_course (id_student, id_course) VALUES (1, 10);
 -- Cursos que estudia William
 INSERT INTO pucp.student_course (id_student, id_course) VALUES (2, 4);
 INSERT INTO pucp.student_course (id_student, id_course) VALUES (2, 12);
+
+-- Cursos que dicta William
+INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (2, 1);
+-- Cursos que dicta Miguel
+INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 6);
+INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 7);
+INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 8);
+INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 9);

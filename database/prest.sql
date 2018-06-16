@@ -23,10 +23,9 @@ CREATE TABLE prest.career(
 CREATE TABLE pucp.user(
 	id_user SERIAL PRIMARY KEY,
 	name VARCHAR NOT NULL,
-	id_career INTEGER REFERENCES prest.career,
 	email VARCHAR NOT NULL,
 	password VARCHAR NOT NULL,
-	active BOOLEAN NOT NULL DEFAULT TRUE
+	active BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE pucp.course(
