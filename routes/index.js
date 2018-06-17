@@ -9,8 +9,11 @@ module.exports = function (app) {
 
 	// Obtener lista de universidades
 	app.get('/university', university.get);
+
 	// Obtener lista de carreras
 	app.get('/career', career.get);
+	// Asignar carrera a usuario
+	app.post('/career', career.set);
 
 	// Crear usuario
 	app.post('/user', user.create);
