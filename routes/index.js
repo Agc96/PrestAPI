@@ -26,16 +26,15 @@ module.exports = function (app) {
 	// Obtener lista de cursos que estudia un alumno
 	app.get('/student/:id_student/course', student_course.get);
 	// Guardar lista de cursos que estudia un alumno
-	app.post('/student/:id_student/course', student_course.set);
+	app.post('/student/:id_student/course', student_course.add);
 	// Eliminar un curso que estudia un alumno
 	app.delete('/student/:id_student/course/:id_course', student_course.delete);
 
 	// Obtener lista de cursos que aprende un profesor
 	app.get('/teacher/:id_teacher/course', teacher_course.get);
 	// Guardar lista de cursos que estudia un alumno
-	app.post('/teacher/:id_teacher/course', teacher_course.set);
+	app.post('/teacher/:id_teacher/course', teacher_course.add);
 	// Eliminar un curso que estudia un alumno
 	app.delete('/teacher/:id_teacher/course/:id_course', teacher_course.delete);
-
 
 }

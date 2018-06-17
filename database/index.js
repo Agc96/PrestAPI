@@ -11,5 +11,26 @@ const pool = new pg.Pool({
 module.exports = {
 	query: (text, params, callback) => {
 		return pool.query(text, params, callback);
+	},
+	transaction: (texts, params) => {
+		(async () => {
+			const client = await pool.connect();
+			try {
+				await client.query('BEGIN');
+				for (var i = 0; i < params.length; i++) {
+					let queryText = (typeof texts === 'string') ? texts : texts[i];
+					await client.query(queryText, params[i]);
+				}
+				await client.query('COMMIT');
+			} catch (e) {
+				await client.query('ROLLBACK');
+				throw e
+			} finally {
+				client.release();
+			}
+		})().catch(e => {
+			console.error(e.stack);
+			throw e;
+		});
 	}
 }

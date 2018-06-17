@@ -2,8 +2,10 @@ const db = require('../database');
 
 module.exports = {
 	get: (req, res, next) => {
+		// Verificar los datos ingresados
 		var id_student = parseInt(req.params.id_student);
 		if (isNaN(id_student)) return next();
+		// Ejecutar el query
 		db.query(`SELECT (id_course, name, code) from pucp.course WHERE id_course IN
 			(SELECT id_course FROM pucp.student_course WHERE id_student = $1 AND active = TRUE)`,
 			[req.params.id_student], (err, result) => {
@@ -11,10 +13,34 @@ module.exports = {
 				res.status(200).send(result.rows);
 			});
 	},
-	set: (req, res, next) => {
-		// db.transaction
+	add: (req, res, next) => {
+		try {
+			// Verificar los datos ingresados
+			var id_student = parseInt(req.params.id_student);
+			if (isNaN(id_student)) return next();
+			var courses = JSON.parse(req.query.data);
+			// Preparar los datos
+			var params = [];
+			for (var i = 0; i < courses.length; i++) {
+				params.push([id_student, courses[i]]);
+			}
+			// Ejecutar la transaccion
+			db.transaction('INSERT INTO pucp.student_course (id_student, id_course) VALUES ($1, $2)', params);
+			res.status(200).send('OK');
+		} catch (err) {
+			next(err);
+		}
 	},
 	delete: (req, res, next) => {
-		// db.query('UPDATE pucp.student_course SET active = FALSE WHERE id_student = $1 AND id_course = $2')
+		// Verificar los datos ingresados
+		var id_student = parseInt(req.params.id_student);
+		var id_course = parseInt(req.params.id_course);
+		if (isNaN(id_student) || isNaN(id_course)) return next();
+		// Ejecutar el query
+		db.query('UPDATE pucp.student_course SET active = FALSE WHERE id_student = $1 AND id_course = $2',
+			[id_student, id_course], (err, result) => {
+				if (err) return next(err);
+				res.status(200).send('OK');
+			});
 	}
 }
