@@ -1,9 +1,8 @@
+require('dotenv').config()
+
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-
-// const pg = require('pg');
-// const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/prest';
 
 const routes = require('./routes');
 routes(app);

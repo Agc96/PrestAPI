@@ -20,6 +20,8 @@ module.exports = function (app) {
 	// Confirmar correo electrónico
 	app.get('/confirm', user.confirm);
 	app.get('/styles.css', user.styles);
+	app.get('/logo-font.ttf', user.font);
+	app.get('/check.svg', user.check);
 	// Iniciar sesión
 	app.post('/login', user.login);
 

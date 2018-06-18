@@ -1,12 +1,15 @@
 const pg = require('pg');
-require('dotenv').config()
-
 const pool = new pg.Pool({
 	user: process.env.DB_USER,
-	database: 'prest',
+	database: process.env.DB_CONNECT,
 	password: process.env.DB_PASS,
 	port: 5432
 });
+
+const crypto = require("crypto");
+const randomString = function (length) {
+	return crypto.randomBytes(length || 32).toString('hex');
+}
 
 module.exports = {
 	query: (text, params, callback) => {
@@ -24,13 +27,36 @@ module.exports = {
 				await client.query('COMMIT');
 			} catch (e) {
 				await client.query('ROLLBACK');
+				throw e;
+			} finally {
+				client.release();
+			}
+		})().catch(err => {
+			console.error(err.stack);
+			throw err;
+		});
+	},
+	user: (params, next, callback) => {
+		(async () => {
+			const client = await pool.connect();
+			try {
+				await client.query('BEGIN');
+				const id_user = await client.query(`INSERT INTO pucp.user (name, email, password)
+					VALUES ($1, $2, $3) RETURNING id_user`, params);
+				const token = randomString();
+				await client.query(`INSERT INTO pucp.pending_user (id_user, token) VALUES ($1, $2)`,
+					[id_user, token]);
+				await client.query('COMMIT');
+				callback(token);
+			} catch (e) {
+				await client.query('ROLLBACK');
 				throw e
 			} finally {
 				client.release();
 			}
-		})().catch(e => {
-			console.error(e.stack);
-			throw e;
+		}).catch(err => {
+			console.error(err.stack);
+			next(err);
 		});
 	}
 }

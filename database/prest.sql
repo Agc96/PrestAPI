@@ -28,6 +28,11 @@ CREATE TABLE pucp.user(
 	active BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+CREATE TABLE pucp.pending_user(
+	id_user INTEGER REFERENCES pucp.user,
+	token VARCHAR NOT NULL
+);
+
 CREATE TABLE pucp.course(
 	id_course SERIAL PRIMARY KEY,
 	name VARCHAR NOT NULL,
