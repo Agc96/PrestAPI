@@ -3,7 +3,6 @@
 -- En la práctica deberían usarse PKs random (especialmente en user) pero eso se hará después.
 ----------------------------------------------------------------------------------------------
 
--- CREATE DATABASE prest;
 CREATE SCHEMA prest;
 CREATE SCHEMA pucp;
 
@@ -22,6 +21,7 @@ CREATE TABLE prest.career(
 
 CREATE TABLE pucp.user(
 	id_user SERIAL PRIMARY KEY,
+	id_career INTEGER REFERENCES prest.career,
 	name VARCHAR NOT NULL,
 	email VARCHAR NOT NULL,
 	password VARCHAR NOT NULL,
@@ -36,47 +36,37 @@ CREATE TABLE pucp.pending_user(
 CREATE TABLE pucp.course(
 	id_course SERIAL PRIMARY KEY,
 	name VARCHAR NOT NULL,
-	code VARCHAR NOT NULL,
-	active BOOLEAN NOT NULL DEFAULT TRUE
+	code VARCHAR NOT NULL
 );
 
 CREATE TABLE pucp.curriculum(
-	id_career INTEGER REFERENCES prest.career(id_career),
-	id_course INTEGER REFERENCES pucp.course(id_course),
+	id_career INTEGER REFERENCES prest.career,
+	id_course INTEGER REFERENCES pucp.course,
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE pucp.student_course(
-	id_student_course SERIAL PRIMARY KEY,
 	id_student INTEGER REFERENCES pucp.user,
 	id_course INTEGER REFERENCES pucp.course,
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- A PARTIR DE AQUI FALTA
-
 CREATE TABLE pucp.teacher_course(
-	id_teacher_course SERIAL PRIMARY KEY,
 	id_teacher INTEGER REFERENCES pucp.user,
 	id_course INTEGER REFERENCES pucp.course,
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
-
--- TODO
 
 CREATE TABLE pucp.advisory(
 	id_advisory SERIAL PRIMARY KEY,
 	id_student INTEGER REFERENCES pucp.user,
 	id_teacher INTEGER REFERENCES pucp.user,
 	id_course INTEGER REFERENCES pucp.course,
-	time_start TIMESTAMP NOT NULL,
-	time_end TIME NOT NULL,
-	confirmed_request BOOLEAN,
-	confirmed_student BOOLEAN,
-	confirmed_teacher BOOLEAN
+	time_start TIMESTAMPTZ NOT NULL,
+	time_end TIMESTAMPTZ NOT NULL,
+	confirmed BOOLEAN,
+	confirmed_time TIMESTAMPTZ
 );
-
--- TODO
 
 CREATE TABLE pucp.chat(
 	id_chat SERIAL PRIMARY KEY,
@@ -84,24 +74,18 @@ CREATE TABLE pucp.chat(
 	id_teacher INTEGER REFERENCES pucp.user
 );
 
--- TODO
-
 CREATE TABLE pucp.message(
 	id_message SERIAL PRIMARY KEY,
 	id_chat INTEGER REFERENCES pucp.chat,
 	id_user INTEGER REFERENCES pucp.user,
 	message VARCHAR NOT NULL,
-	created_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL
 );
-
--- TODO
 
 CREATE TABLE pucp.message_file(
 	id_message INTEGER REFERENCES pucp.message,
 	file BYTEA NOT NULL
 );
-
--- TODO
 
 CREATE TABLE pucp.message_location(
 	id_message INTEGER REFERENCES pucp.message,
@@ -109,4 +93,10 @@ CREATE TABLE pucp.message_location(
 	longitude DOUBLE PRECISION NOT NULL
 );
 
--- TODO
+CREATE TABLE pucp.payment(
+	id_payment SERIAL PRIMARY KEY,
+	id_teacher INTEGER REFERENCES pucp.user,
+	card_number NUMERIC NOT NULL,
+	expiration DATE NOT NULL,
+	cvv NUMERIC
+);

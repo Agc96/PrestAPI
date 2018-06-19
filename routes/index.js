@@ -4,6 +4,7 @@ const user = require('./user');
 const course = require('./course');
 const student_course = require('./student_course');
 const teacher_course = require('./teacher_course');
+const advisory = require('./advisory');
 
 module.exports = function (app) {
 
@@ -13,7 +14,7 @@ module.exports = function (app) {
 	// Obtener lista de carreras
 	app.get('/career', career.get);
 	// Asignar carrera a usuario
-	app.post('/career', career.set);
+	app.post('career', career.set);
 
 	// Crear usuario
 	app.post('/user', user.create);
@@ -41,5 +42,10 @@ module.exports = function (app) {
 	app.post('/teacher/:id_teacher/course', teacher_course.add);
 	// Eliminar un curso que estudia un alumno
 	app.delete('/teacher/:id_teacher/course/:id_course', teacher_course.delete);
+
+	// Obtener lista de asesorías de un alumno
+	app.get('/student/:id_student/advisory', advisory.student);
+	// Obtener lista de asesorías de un profesor
+	app.get('/teacher/:id_teacher/advisory', advisory.teacher);
 
 }

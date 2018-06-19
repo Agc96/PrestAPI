@@ -24,7 +24,7 @@ const mailOptions = function (name, email, token) {
 			<h2 style="font-style:italic;">prest</h2>
 			<p>Hola ` + name + `,</p>
 			<p>Para poder ingresar a Prest debes confirmar tu correo electr&oacute;nico haciendo clic en
-				<a href="www.prest.com.pe/confirm?token=` + token + `">este link</a>.
+				<a href="` + process.env.API_URL + `/confirm?token=` + token + `">este link</a>.
 			</p>
 			<p>Saludos,</p>
 			<p>El equipo de Prest</p>
@@ -47,10 +47,22 @@ module.exports = {
 		// Generar una contraseña y guardarla
 		bcrypt.hash(password, saltRounds, function(err, hash) {
 			if (err) return next(err);
-			db.user([name, email, hash], next, (token) => {
+			// Ejecutar la transacción
+			db.transaction(next, async (client) => {
+				// Insertar un usuario inicialmente vacío
+				const id_user = await client.query(`INSERT INTO pucp.user (name, email, password)
+					VALUES ($1, $2, $3) RETURNING id_user`, [name, email, hash]);
+				// Generar una cadena aleatoria para confirmar el correo electrónico
+				const token = randomString();
+				await client.query(`INSERT INTO pucp.pending_user (id_user, token) VALUES ($1, $2)`,
+						[id_user, token]);
+				return token;
+			}, (token) => {
 				// Mandar correo con los datos
-				// transporter.sendMail(mailOptions(email, token));
-				res.status(200).send('OK');
+				transporter.sendMail(mailOptions(email, token), (err, result) => {
+					if (err) next(err);
+					else res.status(200).send('OK');
+				});
 			});
 		});
 	},

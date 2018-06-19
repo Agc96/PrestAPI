@@ -109,3 +109,7 @@ INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 6);
 INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 7);
 INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 8);
 INSERT INTO pucp.teacher_course (id_teacher, id_course) VALUES (4, 9);
+
+-- Asesoría que dicta Miguel a Anthony
+INSERT INTO pucp.advisory (id_teacher, id_student, id_course, time_start, time_end)
+VALUES (4, 1, 7, make_timestamptz(2018, 06, 22, 18, 0, 0), make_timestamptz(2018, 06, 22, 20, 0, 0));

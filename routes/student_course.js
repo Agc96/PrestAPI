@@ -19,14 +19,17 @@ module.exports = {
 			var id_student = parseInt(req.params.id_student);
 			if (isNaN(id_student)) return next();
 			var courses = JSON.parse(req.query.data);
-			// Preparar los datos
-			var params = [];
-			for (var i = 0; i < courses.length; i++) {
-				params.push([id_student, courses[i]]);
-			}
 			// Ejecutar la transaccion
-			db.transaction('INSERT INTO pucp.student_course (id_student, id_course) VALUES ($1, $2)', params);
-			res.status(200).send('OK');
+			db.transaction(next, async (client) => {
+				for (var i = 0; i < courses.length; i++) {
+					var rows = await client.query(`UPDATE pucp.teacher_course SET active = TRUE
+						WHERE id_teacher = $1 AND id_course = $2 RETURNING count(*)`, [id_teacher, courses[i]]);
+					if (rows <= 0) await client.query(`INSERT INTO pucp.student_course (id_student, id_course)
+						VALUES ($1, $2)`, [id_student, courses[i]]);
+				}
+			}, (result) => {
+				res.status(200).send('OK');
+			});
 		} catch (err) {
 			next(err);
 		}

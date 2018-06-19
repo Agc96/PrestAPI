@@ -7,25 +7,18 @@ const pool = new pg.Pool({
 	port: process.env.DB_PORT || 5432
 });
 
-const crypto = require("crypto");
-const randomString = function (length) {
-	return crypto.randomBytes(length || 32).toString('hex');
-}
-
 module.exports = {
 	query: (text, params, callback) => {
 		return pool.query(text, params, callback);
 	},
-	transaction: (texts, params) => {
+	transaction: (next, callback, success) => {
 		(async () => {
 			const client = await pool.connect();
 			try {
 				await client.query('BEGIN');
-				for (var i = 0; i < params.length; i++) {
-					let queryText = (typeof texts === 'string') ? texts : texts[i];
-					await client.query(queryText, params[i]);
-				}
+				var result = callback(client);
 				await client.query('COMMIT');
+				if (success && result) success(result);
 			} catch (e) {
 				await client.query('ROLLBACK');
 				throw e;
@@ -34,30 +27,7 @@ module.exports = {
 			}
 		})().catch(err => {
 			console.error(err.stack);
-			throw err;
-		});
-	},
-	user: (params, next, callback) => {
-		(async () => {
-			const client = await pool.connect();
-			try {
-				await client.query('BEGIN');
-				const id_user = await client.query(`INSERT INTO pucp.user (name, email, password)
-					VALUES ($1, $2, $3) RETURNING id_user`, params);
-				const token = randomString();
-				await client.query(`INSERT INTO pucp.pending_user (id_user, token) VALUES ($1, $2)`,
-					[id_user, token]);
-				await client.query('COMMIT');
-				callback(token);
-			} catch (e) {
-				await client.query('ROLLBACK');
-				throw e
-			} finally {
-				client.release();
-			}
-		}).catch(err => {
-			console.error(err.stack);
 			next(err);
-		});
+		})
 	}
 }
