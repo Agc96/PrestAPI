@@ -1,5 +1,4 @@
 const db = require('../database');
-const prestLogo = require('./logo')
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
