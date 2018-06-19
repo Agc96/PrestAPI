@@ -1,9 +1,10 @@
 const pg = require('pg');
 const pool = new pg.Pool({
-	user: process.env.DB_USER,
-	database: process.env.DB_CONNECT,
+	host: process.env.DB_HOST || 'localhost',
+	user: process.env.DB_USER || 'prest',
+	database: process.env.DB_NAME || 'prest',
 	password: process.env.DB_PASS,
-	port: 5432
+	port: process.env.DB_PORT || 5432
 });
 
 const crypto = require("crypto");
