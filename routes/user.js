@@ -3,10 +3,6 @@ const db = require('../database');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-const directory = {
-	root: __dirname + '/../views'
-}
-
 const nodemailer = require('nodemailer')
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -65,26 +61,6 @@ module.exports = {
 				});
 			});
 		});
-	},
-	confirm: (req, res, next) => {
-		// Verificar que se tengan todos los datos
-		const token = req.query.token;
-		if (!token) return res.status(404).sendFile('404.html', directory);
-		// Ejecutar el update
-		db.query(`UPDATE pucp.user SET active = TRUE WHERE id_user IN
-				(SELECT id_user FROM pucp.pending_user WHERE token = $1)`, [token], (err, result) => {
-			if (err) res.status(404).sendFile('404.html', directory);
-			else res.status(200).sendFile('confirmed.html', directory);
-		});
-	},
-	styles: (req, res, next) => {
-		res.sendFile('styles.css', directory);
-	},
-	font: (req, res, next) => {
-		res.sendFile('logo-font.ttf', directory);
-	},
-	check: (req, res, next) => {
-		res.sendFile('check.svg', directory);
 	},
 	login: (req, res, next) => {
 		// Verificar que se tengan todos los datos
