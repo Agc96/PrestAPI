@@ -31,7 +31,7 @@ CREATE TABLE prest.curriculum(
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE OR REPLACE FUNCTION pseudo_encrypt(BIGVALUE bigint) RETURNS int AS $$
+CREATE OR REPLACE FUNCTION pseudo_encrypt(BIGVALUE INTEGER) RETURNS int AS $$
 DECLARE
 value int;
 l1 int;
@@ -57,9 +57,8 @@ $$ LANGUAGE plpgsql strict immutable;
 CREATE SEQUENCE prest.user_sequence;
 
 CREATE TABLE prest.user(
-	id_user BIGINT PRIMARY KEY DEFAULT pseudo_encrypt(nextval('prest.user_sequence')),
+	id_user INTEGER PRIMARY KEY DEFAULT pseudo_encrypt(nextval('prest.user_sequence')),
 	id_university INTEGER NOT NULL REFERENCES prest.university,
-	id_career INTEGER NOT NULL REFERENCES prest.career,
 	name VARCHAR NOT NULL,
 	phone NUMERIC UNIQUE NOT NULL,
 	email VARCHAR UNIQUE NOT NULL,
@@ -68,25 +67,39 @@ CREATE TABLE prest.user(
 );
 
 CREATE TABLE prest.pending_user(
-	id_user BIGINT NOT NULL REFERENCES prest.user,
+	id_user INTEGER NOT NULL REFERENCES prest.user,
 	token VARCHAR NOT NULL
 );
 
+CREATE TABLE prest.student(
+	id_student INTEGER PRIMARY KEY REFERENCES prest.user,
+	id_career INTEGER NOT NULL REFERENCES prest.career,
+	advisory_count INTEGER NOT NULL DEFAULT 0
+);
+
 CREATE TABLE prest.student_course(
-	id_student BIGINT NOT NULL REFERENCES prest.user,
+	id_student INTEGER NOT NULL REFERENCES prest.student,
 	id_course INTEGER NOT NULL REFERENCES prest.course,
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+CREATE TABLE prest.teacher(
+	id_teacher INTEGER PRIMARY KEY REFERENCES prest.user,
+	id_career INTEGER NOT NULL REFERENCES prest.career,
+	payment_per_hour DECIMAL NOT NULL DEFAULT 0,
+	advisory_count INTEGER NOT NULL DEFAULT 0,
+	advisory_score DOUBLE PRECISION NOT NULL DEFAULT 0
+);
+
 CREATE TABLE prest.teacher_course(
-	id_teacher BIGINT NOT NULL REFERENCES prest.user,
+	id_teacher INTEGER NOT NULL REFERENCES prest.teacher,
 	id_course INTEGER NOT NULL REFERENCES prest.course,
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE prest.payment_method(
 	id_payment_method SERIAL PRIMARY KEY,
-	id_user BIGINT NOT NULL REFERENCES prest.user,
+	id_user INTEGER NOT NULL REFERENCES prest.user,
 	card_number VARCHAR NOT NULL,
 	expiration DATE NOT NULL,
 	cvv INTEGER
@@ -94,15 +107,16 @@ CREATE TABLE prest.payment_method(
 
 CREATE TABLE prest.advisory(
 	id_advisory SERIAL PRIMARY KEY,
-	id_student BIGINT NOT NULL REFERENCES prest.user,
-	id_teacher BIGINT NOT NULL REFERENCES prest.user,
+	id_student INTEGER NOT NULL REFERENCES prest.student,
+	id_teacher INTEGER NOT NULL REFERENCES prest.teacher,
 	id_course INTEGER NOT NULL REFERENCES prest.course,
-	id_payment_method INTEGER REFERENCES prest.payment_method,
 	time_start TIMESTAMP WITH TIME ZONE NOT NULL,
 	time_end TIMESTAMP WITH TIME ZONE NOT NULL,
+	id_payment_method INTEGER REFERENCES prest.payment_method,
+	payment DECIMAL NOT NULL,
 	confirmed BOOLEAN,
 	confirmed_time TIMESTAMP WITH TIME ZONE,
-	calification DECIMAL
+	score DOUBLE PRECISION
 );
 
 CREATE TABLE prest.advisory_topic(
@@ -112,7 +126,7 @@ CREATE TABLE prest.advisory_topic(
 
 CREATE TABLE prest.disponibility(
 	id_disponibility SERIAL PRIMARY KEY,
-	id_teacher INTEGER NOT NULL REFERENCES prest.user,
+	id_teacher INTEGER NOT NULL REFERENCES prest.teacher,
 	id_course INTEGER NOT NULL REFERENCES prest.course,
 	day_of_week SMALLINT NOT NULL,
 	hour_start TIME NOT NULL,
@@ -122,6 +136,6 @@ CREATE TABLE prest.disponibility(
 
 CREATE TABLE prest.chat(
 	id_chat SERIAL PRIMARY KEY,
-	id_student BIGINT NOT NULL REFERENCES prest.user,
-	id_teacher BIGINT NOT NULL REFERENCES prest.user
+	id_student INTEGER NOT NULL REFERENCES prest.student,
+	id_teacher INTEGER NOT NULL REFERENCES prest.teacher
 );

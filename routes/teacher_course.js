@@ -39,11 +39,12 @@ module.exports = {
 		var id_teacher = parseInt(req.params.id_teacher);
 		var id_course = parseInt(req.params.id_course);
 		if (isNaN(id_teacher) || isNaN(id_course)) return next();
-		// Ejecutar el query
-		db.query('UPDATE prest.teacher_course SET active = FALSE WHERE id_teacher = $1 AND id_course = $2',
-			[id_teacher, id_course], (err, result) => {
-				if (err) return next(err);
-				res.status(200).send('OK');
-			});
+		// Ejecutar la transacción
+		db.transaction(next, async (client) => {
+			await client.query(`UPDATE prest.teacher_course SET active = FALSE
+				WHERE id_teacher = $1 AND id_course = $2`, [id_teacher, id_course]);
+		}, (result) => {
+			res.status(200).send('OK');
+		});
 	}
 }

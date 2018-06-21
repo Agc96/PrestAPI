@@ -11,17 +11,17 @@ module.exports = function (app) {
 	// Obtener lista de universidades
 	app.get('/university', university.get); // OK
 
-	// Obtener lista de carreras
-	app.get('/career', career.get); // OK
-	// Obtener lista de cursos de una carrera
-	app.get('/career/:id_career/course', career.curriculum); // OK
-	// Asignar carrera a usuario
-	app.post('/user/:id_user/career', career.assign);
-
-	// Crear usuario
-	app.post('/user', user.create);
 	// Iniciar sesión
 	app.post('/login', user.login);
+	// Crear usuario
+	app.post('/user/create', user.create);
+
+	// Obtener lista de carreras
+	app.get('/career', career.get); // OK
+	// Asignar carrera a usuario
+	app.post('/career', career.assign);
+	// Obtener lista de cursos de una carrera
+	app.get('/career/:id_career/course', career.curriculum); // OK
 
 	// Obtener lista de cursos que estudia un alumno
 	app.get('/student/:id_student/course', student_course.get); // OK
@@ -41,14 +41,15 @@ module.exports = function (app) {
 	app.get('/student/:id_student/advisory', advisory.student); // OK
 	// Obtener lista de asesorías de un profesor
 	app.get('/teacher/:id_teacher/advisory', advisory.teacher); // OK
-	// Obtener detalles de las asesorías de un curso que dicta un profesor
-	app.get('/teacher/:id_teacher', advisory.resume);
 	// Obtener temas a tratar en una asesoría
 	app.get('/advisory/:id_advisory/topic', advisory.topics); // OK
 
 	// Ver disponibilidad de horarios de profesores
-	app.get('/course/:id_course/disponibility', disponibility.get);
+	app.get('/course/:id_course/disponibility', disponibility.get); // OK
 	// Guardar disponibilidad de horarios para un profesor
 	app.post('/teacher/:id_teacher/disponibility', disponibility.set);
+
+	// Obtener 
+	// app.get('/user/:id_user/payment', payment.get);
 
 }
