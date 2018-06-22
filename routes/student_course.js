@@ -14,21 +14,20 @@ module.exports = {
 			});
 	},
 	add: (req, res, next) => {
-		// Verificar los datos ingresados
-		var id_student = parseInt(req.params.id_student);
-		if (isNaN(id_student)) return next();
-		// Obtener los datos
 		try {
+			// Verificar los datos ingresados
+			var id_student = parseInt(req.params.id_student);
+			if (isNaN(id_student)) return next();
 			var courses = JSON.parse(req.query.data);
 			// Ejecutar la transaccion
 			db.transaction(next, async (client) => {
 				for (var i = 0; i < courses.length; i++) {
 					// Primero se intenta actualizar si ya habían registros
-					var rows = await client.query(`UPDATE prest.teacher_course SET active = TRUE
-						WHERE id_teacher = $1 AND id_course = $2 RETURNING count(*)`, [id_teacher, courses[i]]);
+					var result = await client.query(`UPDATE prest.student_course SET active = TRUE
+						WHERE id_student = $1 AND id_course = $2`, [id_student, courses[i]]);
 					// En caso no hayan, se inserta
-					if (rows <= 0) await client.query(`INSERT INTO prest.student_course (id_student, id_course)
-						VALUES ($1, $2)`, [id_student, courses[i]]);
+					if (result.rowCount <= 0) await client.query(`INSERT INTO prest.student_course
+						(id_student, id_course) VALUES ($1, $2)`, [id_student, courses[i]]);
 				}
 			}, (result) => {
 				res.status(200).send('OK');

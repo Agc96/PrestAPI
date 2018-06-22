@@ -26,5 +26,8 @@ module.exports = {
 	},
 	set: (req, res, next) => {
 		return next();
+	},
+	delete: (req, res, next) => {
+		return next();
 	}
 }

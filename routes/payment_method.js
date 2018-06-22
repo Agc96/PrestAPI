@@ -14,7 +14,7 @@ module.exports = {
 	},
 	set: (req, res, next) => {
 		// Verificar los datos ingresados
-		const card_number = parseInt(req.query.card_number);
+		const card_number = req.query.card_number;
 		if (!card_number) return next();
 		const expiration = req.query.expiration;
 		if (!expiration) return next();

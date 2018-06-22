@@ -39,8 +39,8 @@ module.exports = {
 		// Verificar que se tengan todos los datos
 		const id_university = parseInt(req.query.university);
 		const name = req.query.name;
-		const phone = 987654321;
-		const email = 'anthony.gutierrez@pucp.pe';//req.query.email;
+		const phone = 987654321; // No se usa
+		const email = req.query.email;
 		const password = req.query.password;
 		if (isNaN(id_university) || !name || !email || !password) return next();
 		// Generar una contraseña y guardarla

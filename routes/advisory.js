@@ -46,5 +46,8 @@ module.exports = {
 			if (err) return next(err);
 			res.send(result.rows);
 		});
+	},
+	create: (req, res, next) => {
+		return next();
 	}
 }

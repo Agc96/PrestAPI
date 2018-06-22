@@ -22,10 +22,11 @@ module.exports = {
 			// Ejecutar la transaccion
 			db.transaction(next, async (client) => {
 				for (var i = 0; i < courses.length; i++) {
-					var rows = await client.query(`UPDATE prest.teacher_course SET active = TRUE
-						WHERE id_teacher = $1 AND id_course = $2 RETURNING count(*)`, [id_teacher, courses[i]]);
-					if (rows <= 0) await client.query(`INSERT INTO prest.teacher_course (id_teacher, id_course)
-						VALUES ($1, $2)`, [id_teacher, courses[i]]);
+					// Primero se intenta actualizar si ya habían registros
+					var result = await client.query(`UPDATE prest.teacher_course SET active = TRUE
+						WHERE id_teacher = $1 AND id_course = $2`, [id_teacher, courses[i]]);
+					if (result.rowCount <= 0) await client.query(`INSERT INTO prest.teacher_course
+						(id_teacher, id_course) VALUES ($1, $2)`, [id_teacher, courses[i]]);
 				}
 			}, (result) => {
 				res.status(200).send('OK');

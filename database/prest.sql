@@ -60,7 +60,7 @@ CREATE TABLE prest.user(
 	id_user INTEGER PRIMARY KEY DEFAULT pseudo_encrypt(nextval('prest.user_sequence')),
 	id_university INTEGER NOT NULL REFERENCES prest.university,
 	name VARCHAR NOT NULL,
-	phone NUMERIC UNIQUE NOT NULL,
+	phone NUMERIC,
 	email VARCHAR UNIQUE NOT NULL,
 	password VARCHAR NOT NULL,
 	active BOOLEAN NOT NULL DEFAULT FALSE

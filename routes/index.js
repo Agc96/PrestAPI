@@ -16,14 +16,14 @@ module.exports = function (app) {
 	// Iniciar sesión
 	app.post('/login', user.login); // OK
 	// Crear usuario
-	app.post('/user/create', user.create);
+	app.post('/user/create', user.create); // OK
 	// Obtener datos de usuario
 	app.get('/user/:id_user', user.get); // OK
 
 	// Obtener lista de carreras
 	app.get('/career', career.get); // OK
 	// Asignar carrera a usuario
-	app.post('/career', career.assign);
+	app.post('/career', career.assign); // OK
 	// Obtener lista de cursos de una carrera
 	app.get('/career/:id_career/course', career.curriculum); // OK
 
@@ -31,15 +31,15 @@ module.exports = function (app) {
 	app.get('/student/:id_student/course', student_course.get); // OK
 	// Guardar lista de cursos que estudia un alumno
 	app.post('/student/:id_student/course', student_course.add);
-	// Eliminar un curso que estudia un alumno
-	app.delete('/student/:id_student/course/:id_course', student_course.delete);
+	// Desactivar un curso que estudia un alumno
+	app.delete('/student/:id_student/course/:id_course', student_course.delete); // OK
 
 	// Obtener lista de cursos que dicta un profesor
 	app.get('/teacher/:id_teacher/course', teacher_course.get); // OK
 	// Guardar lista de cursos que dicta un profesor
 	app.post('/teacher/:id_teacher/course', teacher_course.add);
-	// Eliminar un curso que dicta un profesor
-	app.delete('/teacher/:id_teacher/course/:id_course', teacher_course.delete);
+	// Desactivar un curso que dicta un profesor
+	app.delete('/teacher/:id_teacher/course/:id_course', teacher_course.delete); // OK
 
 	// Obtener lista de asesorías de un alumno
 	app.get('/student/:id_student/advisory', advisory.student); // OK
@@ -48,12 +48,14 @@ module.exports = function (app) {
 	// Obtener temas a tratar en una asesoría
 	app.get('/advisory/:id_advisory/topic', advisory.topics); // OK
 	// Crear asesoría
-	// app.get('/advisory/create', advisory.create);
+	app.get('/advisory/create', advisory.create);
 
 	// Ver disponibilidad de horarios de profesores
 	app.get('/course/:id_course/disponibility', disponibility.get); // OK
 	// Guardar disponibilidad de horarios para un profesor
 	app.post('/teacher/:id_teacher/disponibility', disponibility.set);
+	// Desactivar disponibilidad de horarios para un profesor
+	app.delete('/teacher/:id_teacher/disponibility', disponibility.delete);
 
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
@@ -63,8 +65,9 @@ module.exports = function (app) {
 	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete);
 
 	// Confirmación con correo electrónico
-	app.get('/confirm', confirm.confirm);
-	app.get('/styles.css', confirm.styles);
-	app.get('/logo-font.ttf', confirm.logo);
-	app.get('/check.svg', confirm.check);
+	app.get('/confirm', confirm.confirm); // OK
+	app.get('/styles.css', confirm.styles); // OK
+	app.get('/logo-font.ttf', confirm.logo); // OK
+	app.get('/check.svg', confirm.check); // OK
+
 }
