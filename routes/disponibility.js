@@ -25,6 +25,6 @@ module.exports = {
 		// 2. dia de la semana y rango de horas
 	},
 	set: (req, res, next) => {
-		//
+		return next();
 	}
 }

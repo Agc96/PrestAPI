@@ -5,6 +5,7 @@ const student_course = require('./student_course');
 const teacher_course = require('./teacher_course');
 const advisory = require('./advisory');
 const disponibility = require('./disponibility');
+const payment_method = require('./payment_method');
 
 module.exports = function (app) {
 
@@ -12,9 +13,11 @@ module.exports = function (app) {
 	app.get('/university', university.get); // OK
 
 	// Iniciar sesión
-	app.post('/login', user.login);
+	app.post('/login', user.login); // OK
 	// Crear usuario
 	app.post('/user/create', user.create);
+	// Obtener datos de usuario
+	app.get('/user/:id_user', user.get); // OK
 
 	// Obtener lista de carreras
 	app.get('/career', career.get); // OK
@@ -49,7 +52,11 @@ module.exports = function (app) {
 	// Guardar disponibilidad de horarios para un profesor
 	app.post('/teacher/:id_teacher/disponibility', disponibility.set);
 
-	// Obtener 
-	// app.get('/user/:id_user/payment', payment.get);
+	// Obtener métodos de pago de un usuario
+	app.get('/user/:id_user/payment', payment_method.get); // OK
+	// Guardar un método de pago para un usuario
+	app.post('/user/:id_user/payment', payment_method.set);
+	// Quitar un método de pago de un usuario
+	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete);
 
 }

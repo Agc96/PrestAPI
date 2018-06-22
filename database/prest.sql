@@ -102,7 +102,8 @@ CREATE TABLE prest.payment_method(
 	id_user INTEGER NOT NULL REFERENCES prest.user,
 	card_number VARCHAR NOT NULL,
 	expiration DATE NOT NULL,
-	cvv INTEGER
+	cvv INTEGER,
+	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE prest.advisory(

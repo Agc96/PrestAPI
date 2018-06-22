@@ -136,10 +136,12 @@ VALUES (483424269, 7, 6, make_time(17, 0, 0), make_time(22, 0, 0));
 
 -- Formas de pago de Anthony
 INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)
-VALUES (561465857, '1234567890123456', make_date(2019, 01, 01), 1234);
+VALUES (561465857, '**** **** **** 1234', make_date(2019, 01, 01), 1234);
+INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)
+VALUES (561465857, '**** **** **** 3456', make_date(2019, 02, 01), 3456);
 -- Formas de pago de Miguel
 INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)
-VALUES (561465857, '9876543210123456', make_date(2019, 02, 01), 3456);
+VALUES (483424269, '**** **** **** 5678', make_date(2019, 05, 01), 5678);
 
 -- Asesoría que dicta Miguel a Anthony
 INSERT INTO prest.advisory (id_student, id_teacher, id_course, time_start, time_end, id_payment_method,
