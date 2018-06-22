@@ -6,6 +6,7 @@ const teacher_course = require('./teacher_course');
 const advisory = require('./advisory');
 const disponibility = require('./disponibility');
 const payment_method = require('./payment_method');
+const confirm = require('./confirm');
 
 module.exports = function (app) {
 
@@ -61,4 +62,9 @@ module.exports = function (app) {
 	// Quitar un método de pago de un usuario
 	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete);
 
+	// Confirmación con correo electrónico
+	app.get('/confirm', confirm.confirm);
+	app.get('/styles.css', confirm.styles);
+	app.get('/logo-font.ttf', confirm.logo);
+	app.get('/check.svg', confirm.check);
 }
