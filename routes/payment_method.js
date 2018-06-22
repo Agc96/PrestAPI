@@ -14,15 +14,15 @@ module.exports = {
 	},
 	set: (req, res, next) => {
 		// Verificar los datos ingresados
+		const id_user = parseInt(req.params.id_user);
 		const card_number = req.query.card_number;
-		if (!card_number) return next();
 		const expiration = req.query.expiration;
-		if (!expiration) return next();
+		if (isNaN(id_user) || !card_number || !expiration) return next();
 		const cvv = req.query.cvv || null;
 		// Ejecutar la transacción
 		db.transaction(next, async (client) => {
-			await client.query(`INSERT INTO prest.payment_method (card_number, expiration, cvv)
-				VALUES ($1, $2, $3)`, [card_number, expiration, cvv]);
+			await client.query(`INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)
+				VALUES ($1, $2, $3, $4)`, [id_user, card_number, expiration, cvv]);
 		}, (result) => {
 			res.status(200).send('OK');
 		});

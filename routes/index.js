@@ -30,14 +30,14 @@ module.exports = function (app) {
 	// Obtener lista de cursos que estudia un alumno
 	app.get('/student/:id_student/course', student_course.get); // OK
 	// Guardar lista de cursos que estudia un alumno
-	app.post('/student/:id_student/course', student_course.add);
+	app.post('/student/:id_student/course', student_course.add); // OK
 	// Desactivar un curso que estudia un alumno
 	app.delete('/student/:id_student/course/:id_course', student_course.delete); // OK
 
 	// Obtener lista de cursos que dicta un profesor
 	app.get('/teacher/:id_teacher/course', teacher_course.get); // OK
 	// Guardar lista de cursos que dicta un profesor
-	app.post('/teacher/:id_teacher/course', teacher_course.add);
+	app.post('/teacher/:id_teacher/course', teacher_course.add); // OK
 	// Desactivar un curso que dicta un profesor
 	app.delete('/teacher/:id_teacher/course/:id_course', teacher_course.delete); // OK
 
@@ -60,9 +60,9 @@ module.exports = function (app) {
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
 	// Guardar un método de pago para un usuario
-	app.post('/user/:id_user/payment', payment_method.set);
+	app.post('/user/:id_user/payment', payment_method.set); // OK
 	// Quitar un método de pago de un usuario
-	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete);
+	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete); // OK
 
 	// Confirmación con correo electrónico
 	app.get('/confirm', confirm.confirm); // OK
