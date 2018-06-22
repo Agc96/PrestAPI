@@ -37,28 +37,34 @@ const randomString = function (length) {
 module.exports = {
 	create: (req, res, next) => {
 		// Verificar que se tengan todos los datos
+		const id_university = parseInt(req.query.university);
 		const name = req.query.name;
-		const email = req.query.email;
+		const phone = 987654321;
+		const email = 'anthony.gutierrez@pucp.pe';//req.query.email;
 		const password = req.query.password;
-		if (!name || !email || !password) return next();
+		if (isNaN(id_university) || !name || !email || !password) return next();
 		// Generar una contraseña y guardarla
 		bcrypt.hash(password, saltRounds, function(err, hash) {
 			if (err) return next(err);
 			// Ejecutar la transacción
 			db.transaction(next, async (client) => {
-				// Insertar un usuario inicialmente vacío
-				const id_user = await client.query(`INSERT INTO prest.user (name, email, password)
-					VALUES ($1, $2, $3) RETURNING id_user`, [name, email, hash]);
+				// Insertar un usuario
+				const user = await client.query(`INSERT INTO prest.user (id_university, name, phone,
+					email, password) VALUES ($1, $2, $3, $4, $5) RETURNING id_user`,
+					[id_university, name, phone, email, hash]);
+				// Obtener el id generado
+				const id_user = (user.rowCount > 0) ? user.rows[0].id_user : null;
+				if (!id_user) throw Exception('Bad user ID');
 				// Generar una cadena aleatoria para confirmar el correo electrónico
-				const token = randomString();
+				const token = randomString(24);
 				await client.query(`INSERT INTO prest.pending_user (id_user, token) VALUES ($1, $2)`,
 						[id_user, token]);
 				return token;
 			}, (token) => {
 				// Mandar correo con los datos
-				transporter.sendMail(mailOptions(email, token), (err, result) => {
-					if (err) next(err);
-					else res.status(200).send('OK');
+				transporter.sendMail(mailOptions(name, email, token), (err, result) => {
+					if (err) return next(err);
+					res.status(200).send('OK, email sent');
 				});
 			});
 		});

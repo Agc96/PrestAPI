@@ -46,6 +46,8 @@ module.exports = function (app) {
 	app.get('/teacher/:id_teacher/advisory', advisory.teacher); // OK
 	// Obtener temas a tratar en una asesoría
 	app.get('/advisory/:id_advisory/topic', advisory.topics); // OK
+	// Crear asesoría
+	// app.get('/advisory/create', advisory.create);
 
 	// Ver disponibilidad de horarios de profesores
 	app.get('/course/:id_course/disponibility', disponibility.get); // OK

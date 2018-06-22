@@ -18,16 +18,19 @@ module.exports = {
 				await client.query('BEGIN');
 				var result = callback(client);
 				await client.query('COMMIT');
-				if (success && result) success(result);
+				return result;
 			} catch (e) {
 				await client.query('ROLLBACK');
 				throw e;
 			} finally {
 				client.release();
 			}
-		})().catch(err => {
+		})().then(result => {
+			console.log('Transaction completed');
+			success(result);
+		}, err => {
 			console.error(err.stack);
 			next(err);
-		})
+		});
 	}
 }
