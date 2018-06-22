@@ -6,7 +6,7 @@ module.exports = {
 		const id_university = parseInt(req.query.university);
 		if (isNaN(id_university)) return next();
 		// Ejecutar el query
-		db.query('SELECT (id_career, name) FROM prest.career WHERE id_university = $1', [id_university],
+		db.query('SELECT id_career, name FROM prest.career WHERE id_university = $1', [id_university],
 				(err, result) => {
 			if (err) next(err);
 			else res.send(result.rows);
@@ -32,8 +32,8 @@ module.exports = {
 		const id_career = parseInt(req.params.id_career);
 		if (isNaN(id_career)) return next();
 		// Ejecutar el query
-		db.query(`SELECT (id_course, name, code) FROM prest.course WHERE id_course IN
-					(SELECT(id_course) FROM prest.curriculum WHERE id_career = $1 AND active = TRUE)`,
+		db.query(`SELECT id_course, name, code FROM prest.course WHERE id_course IN
+					(SELECT id_course FROM prest.curriculum WHERE id_career = $1 AND active = TRUE)`,
 					[id_career], (err, result) => {
 			if (err) return next(err);
 			res.send(result.rows);

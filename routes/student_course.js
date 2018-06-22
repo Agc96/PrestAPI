@@ -6,7 +6,7 @@ module.exports = {
 		var id_student = parseInt(req.params.id_student);
 		if (isNaN(id_student)) return next();
 		// Ejecutar el query
-		db.query(`SELECT (id_course, name, code) from prest.course WHERE id_course IN
+		db.query(`SELECT id_course, name, code from prest.course WHERE id_course IN
 			(SELECT id_course FROM prest.student_course WHERE id_student = $1 AND active = TRUE)`,
 			[req.params.id_student], (err, result) => {
 				if (err) return next(err);
