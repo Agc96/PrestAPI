@@ -46,16 +46,20 @@ module.exports = function (app) {
 	// Obtener lista de asesorías de un profesor
 	app.get('/teacher/:id_teacher/advisory', advisory.teacher); // OK
 	// Obtener temas a tratar en una asesoría
-	app.get('/advisory/:id_advisory/topic', advisory.topics); // OK
-	// Crear asesoría
-	app.get('/advisory/create', advisory.create);
+	app.get('/user/:id_user/advisory/:id_advisory/topic', advisory.topics); // OK
+	// Crear asesoría como un alumno
+	app.post('/student/:id_student/advisory/create', advisory.create); // OK
+	// Confirmar asesoría como un profesor
+	app.put('/teacher/:id_teacher/advisory/:id_advisory/confirm', advisory.confirm); // OK
+	// Calificar al profesor de una asesoría como un alumno
+	app.put('/student/:id_student/advisory/:id_advisory/score', advisory.score); // OK
 
 	// Ver disponibilidad de horarios de profesores
 	app.get('/course/:id_course/disponibility', disponibility.get); // OK
 	// Guardar disponibilidad de horarios para un profesor
 	app.post('/teacher/:id_teacher/disponibility', disponibility.set);
 	// Desactivar disponibilidad de horarios para un profesor
-	app.delete('/teacher/:id_teacher/disponibility', disponibility.delete);
+	app.delete('/teacher/:id_teacher/disponibility/:id_disponibility', disponibility.delete);
 
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
