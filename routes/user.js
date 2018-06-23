@@ -96,13 +96,17 @@ module.exports = {
 		const id_user = parseInt(req.params.id_user);
 		if (isNaN(id_user)) return next();
 		// Ejecutar el query
-		db.query(`SELECT id_university, name, email, student.id_career AS student_id_career,
-				student.advisory_count AS student_count, teacher.id_career AS teacher_id_career,
+		db.query(`
+			SELECT prest.user.id_university, prest.user.name, email, student.id_career AS student_id_career,
+				student_career.name AS student_career, student.advisory_count AS student_count,
+				teacher.id_career AS teacher_id_career, teacher_career.name AS teacher_career,
 				teacher.advisory_count AS teacher_count
 			FROM prest.user
 				LEFT JOIN prest.student AS student ON student.id_student = prest.user.id_user
 				LEFT JOIN prest.teacher AS teacher ON teacher.id_teacher = prest.user.id_user
-			WHERE prest.user.id_user = $1 AND active = TRUE`, [id_user], (err, result) => {
+				LEFT JOIN prest.career AS student_career ON student_career.id_career = student.id_career
+				LEFT JOIN prest.career AS teacher_career ON teacher_career.id_career = teacher.id_career
+			WHERE prest.user.id_user = $1 AND prest.user.active = TRUE`, [id_user], (err, result) => {
 			if (err) return next(err);
 			res.status(200).send(result.rows);
 		});

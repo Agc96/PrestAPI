@@ -1,10 +1,15 @@
+/*
+ * Rutas para la API de Prest
+ * @author Anthony Gutiérrez
+ */
+
 const university = require('./university');
 const career = require('./career');
 const user = require('./user');
 const student_course = require('./student_course');
 const teacher_course = require('./teacher_course');
 const advisory = require('./advisory');
-const disponibility = require('./disponibility');
+const availability = require('./availability');
 const payment_method = require('./payment_method');
 const confirm = require('./confirm');
 
@@ -54,12 +59,14 @@ module.exports = function (app) {
 	// Calificar al profesor de una asesoría como un alumno
 	app.put('/student/:id_student/advisory/:id_advisory/score', advisory.score); // OK
 
-	// Ver disponibilidad de horarios de profesores
-	app.get('/course/:id_course/disponibility', disponibility.get); // OK
+	// Ver disponibilidad de horarios de profesores como alumno
+	app.get('/course/:id_course/availability', availability.getStudent);
+	// Ver disponibilidad de horarios para un profesor
+	app.get('/teacher/:id_teacher/availability', availability.getTeacher);
 	// Guardar disponibilidad de horarios para un profesor
-	app.post('/teacher/:id_teacher/disponibility', disponibility.set);
+	app.post('/teacher/:id_teacher/availability', availability.set);
 	// Desactivar disponibilidad de horarios para un profesor
-	app.delete('/teacher/:id_teacher/disponibility/:id_disponibility', disponibility.delete);
+	app.delete('/teacher/:id_teacher/availability/:id_availability', availability.delete);
 
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
@@ -67,6 +74,9 @@ module.exports = function (app) {
 	app.post('/user/:id_user/payment', payment_method.set); // OK
 	// Quitar un método de pago de un usuario
 	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete); // OK
+
+	// Obtener conversaciones de un usuario
+	// app.get('/user/:id_user/chat');
 
 	// Confirmación con correo electrónico
 	app.get('/confirm', confirm.confirm); // OK
