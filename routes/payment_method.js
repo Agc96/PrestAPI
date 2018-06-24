@@ -24,7 +24,7 @@ module.exports = {
 			await client.query(`INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)
 				VALUES ($1, $2, $3, $4)`, [id_user, card_number, expiration, cvv]);
 		}, (result) => {
-			res.status(200).send('OK');
+			res.status(200).send({ message: 'OK' });
 		});
 	},
 	delete: (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports = {
 			await client.query(`UPDATE prest.payment_method SET active = FALSE
 				WHERE id_user = $1 AND id_payment_method = $2`, [id_user, id_payment_method]);
 		}, (result) => {
-			res.status(200).send('OK');
+			res.status(200).send({ message: 'OK' });
 		});
 	}
 }

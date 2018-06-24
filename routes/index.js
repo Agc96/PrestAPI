@@ -61,11 +61,11 @@ module.exports = function (app) {
 	app.put('/student/:id_student/advisory/:id_advisory/score', advisory.score); // OK
 
 	// Ver disponibilidad de horarios de profesores como alumno
-	app.get('/course/:id_course/availability', availability.student);
+	app.get('/course/:id_course/availability', availability.student); // OK
 	// Ver disponibilidad de horarios para un profesor
-	app.get('/teacher/:id_teacher/availability', availability.teacher);
+	app.get('/teacher/:id_teacher/availability', availability.teacher); // OK
 	// Actualizar disponibilidad de horarios para un profesor
-	app.post('/teacher/:id_teacher/availability', availability.set);
+	app.post('/teacher/:id_teacher/availability', availability.set); // OK
 
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
@@ -75,7 +75,7 @@ module.exports = function (app) {
 	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete); // OK
 
 	// Obtener conversaciones de un usuario
-	app.get('/user/:id_user/chat', chat.get);
+	app.get('/user/:id_user/chat', chat.get); // OK
 	// Obtener lista de mensajes de un chat
 	app.get('/user/:id_user/chat/:id_other_user', chat.messages);
 

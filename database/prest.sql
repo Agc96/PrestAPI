@@ -150,6 +150,7 @@ CREATE TABLE prest.chat(
 
 CREATE TABLE prest.message(
 	id_message SERIAL PRIMARY KEY,
+	id_chat INTEGER NOT NULL REFERENCES prest.chat,
 	id_user INTEGER NOT NULL REFERENCES prest.user,
 	message VARCHAR(100) NOT NULL,
 	created_at TIMESTAMP WITH TIME ZONE NOT NULL,

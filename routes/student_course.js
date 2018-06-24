@@ -30,7 +30,7 @@ module.exports = {
 						(id_student, id_course) VALUES ($1, $2)`, [id_student, courses[i]]);
 				}
 			}, (result) => {
-				res.status(200).send('OK');
+				res.status(200).send({ message: 'OK' });
 			});
 		} catch (err) {
 			next(err);
@@ -46,7 +46,7 @@ module.exports = {
 			await client.query(`UPDATE prest.student_course SET active = FALSE
 				WHERE id_student = $1 AND id_course = $2`, [id_student, id_course]);
 		}, (result) => {
-			res.status(200).send('OK');
+			res.status(200).send({ message: 'OK' });
 		});
 	}
 }

@@ -63,8 +63,8 @@ module.exports = {
 			}, (token) => {
 				// Mandar correo con los datos
 				transporter.sendMail(mailOptions(name, email, token), (err, result) => {
-					if (err) return next(err);
-					res.status(200).send('OK, email sent');
+					if (err) res.status(200).send({ message: 'OK, but email not sent correctly', sent: false});
+					else res.status(200).send({ message: 'OK, email sent!', sent: true});
 				});
 			});
 		});

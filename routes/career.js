@@ -24,7 +24,7 @@ module.exports = {
 			await client.query('INSERT INTO prest.teacher (id_teacher, id_career) VALUES ($1, $2)',
 				[id_user, id_career]);
 		}, (result) => {
-			res.status(200).send('OK');
+			res.status(200).send({ message: 'OK' });
 		});
 	},
 	curriculum: (req, res, next) => {

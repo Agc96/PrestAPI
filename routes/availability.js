@@ -1,5 +1,13 @@
 const db = require('../database');
 
+const parseJSON = function (data) {
+	try {
+		return JSON.parse(data);
+	} catch (e) {
+		return [];
+	}
+}
+
 module.exports = {
 	student: (req, res, next) => {
 		// Verificar los datos obligatorios
@@ -50,27 +58,42 @@ module.exports = {
 		});
 	},
 	set: (req, res, next) => {
-		try {
-			// Verificar los datos ingresados
-			var id_teacher = parseInt(req.params.id_teacher);
-			if (isNaN(id_teacher)) return next();
-			var create_data = JSON.parse(req.params.create);
-			var delete_data = JSON.parse(req.params.delete);
-
-			// Ejecutar la transacción
-			/* db.transaction(next, async (client) => {
-				var result = await client.query(`SELECT 	`)
-				for (var i = 0; i < create_data.length; i++) {
-					await client.query(`INSERT INTO prest.availability (id_teacher, time_start, time_end)
-						VALUES ($1, $2, $3)`, id_teacher, create_data[i].time_start, create_data[i].time_end);
-				}
-				for (var i = 0; i < delete_data.length; i++) {
-					await client.query(`DELETE FROM `)
-				}
-			}); */
-			next();
-		} catch (err) {
-			next(err);
-		}
+		// Verificar los datos ingresados
+		var id_teacher = parseInt(req.params.id_teacher);
+		if (isNaN(id_teacher)) return next();
+		var create_data = parseJSON(req.query.create_data);
+		var delete_data = parseJSON(req.query.delete_data);
+		var repeat = req.query.repeat;
+		if ((create_data.length <= 0) && (delete_data.length <= 0)) return next();
+		// Ejecutar la transacción
+		db.transaction(next, async (client) => {
+			// En caso de que se vaya a repetir, obtener la fecha límite
+			var limit_day = null;
+			if (repeat) {
+				//var result = await client.query(``);
+			}
+			// Insertar
+			for (var i = 0; i < create_data.length; i++) {
+				// Verificar los datos
+				var time_start = new Date(create_data[i].time_start);
+				var time_end = new Date(create_data[i].time_end);
+				if (isNaN(time_start) || isNaN(time_end)) throw 'Bad times on insert' + (i+1);
+				// Ejecutar el query
+				await client.query(`INSERT INTO prest.availability (id_teacher, time_start, time_end)
+					VALUES ($1, $2, $3)`, [id_teacher, time_start, time_end]);
+			}
+			// Eliminar
+			for (var i = 0; i < delete_data.length; i++) {
+				// Verificar los datos
+				var time_start = new Date(delete_data[i].time_start);
+				var time_end = new Date(delete_data[i].time_end);
+				if (isNaN(time_start) || isNaN(time_end)) throw 'Bad times on delete #' + (i+1);
+				// Ejecutar el query
+				await client.query(`DELETE FROM prest.availability WHERE id_teacher = $1
+					AND time_start = $2 AND time_end = $3`, [id_teacher, time_start, time_end]);
+			}
+		}, (result) => {
+			res.status(200).send({ message: 'OK' });
+		});
 	}
 }
