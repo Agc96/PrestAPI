@@ -77,7 +77,11 @@ module.exports = function (app) {
 	// Obtener conversaciones de un usuario
 	app.get('/user/:id_user/chat', chat.get); // OK
 	// Obtener lista de mensajes de un chat
-	app.get('/user/:id_user/chat/:id_other_user', chat.messages);
+	app.get('/chat/:id_student/:id_teacher', chat.messages); // OK
+	// Obtener archivo adjunto de un mensaje si lo tiene
+	app.get('/chat/:id_student/:id_teacher/:id_message', chat.attachment);
+	// Enviar un mensaje a un chat
+	app.get('/chat/:id_student/:id_teacher/send', chat.send);
 
 	// Confirmación con correo electrónico
 	app.get('/confirm', confirm.confirm); // OK

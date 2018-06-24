@@ -8,6 +8,11 @@ const parseJSON = function (data) {
 	}
 }
 
+const parseBool = function (data) {
+	if (typeof(data) !== 'string') return null;
+	return data.toLowerCase() === 'true';
+}
+
 module.exports = {
 	student: (req, res, next) => {
 		// Verificar los datos obligatorios
@@ -63,16 +68,22 @@ module.exports = {
 		if (isNaN(id_teacher)) return next();
 		var create_data = parseJSON(req.query.create_data);
 		var delete_data = parseJSON(req.query.delete_data);
-		var repeat = req.query.repeat;
+		var repeat = parseBool(req.query.repeat);
+		console.log(repeat);
 		if ((create_data.length <= 0) && (delete_data.length <= 0)) return next();
 		// Ejecutar la transacción
 		db.transaction(next, async (client) => {
-			// En caso de que se vaya a repetir, obtener la fecha límite
+			// En caso de que se vaya a repetir, obtener la fecha límite para insertar o eliminar
 			var limit_day = null;
 			if (repeat) {
-				//var result = await client.query(``);
+				limit_day = await client.query(`SELECT day_end::timestamptz FROM prest.semester WHERE active = TRUE
+					AND id_university IN (SELECT id_university FROM prest.user WHERE id_user = $1)`,
+					[id_teacher]);
+				if (limit_day.rowCount <= 0) throw 'Current semester not found';
+				limit_day = new Date(limit_day.rows[0].day_end);
+				if (isNaN(limit_day)) throw 'Bad end time on semester';
 			}
-			// Insertar
+			// Insertar las disponibilidades señaladas
 			for (var i = 0; i < create_data.length; i++) {
 				// Verificar los datos
 				var time_start = new Date(create_data[i].time_start);
@@ -81,8 +92,16 @@ module.exports = {
 				// Ejecutar el query
 				await client.query(`INSERT INTO prest.availability (id_teacher, time_start, time_end)
 					VALUES ($1, $2, $3)`, [id_teacher, time_start, time_end]);
+				// En caso de que se quiera repetir, insertar hasta llegar al fin de ciclo
+				while (repeat) {
+					time_start.setDate(time_start.getDate() + 7);
+					time_end.setDate(time_end.getDate() + 7);
+					if (time_start > limit_day) break;
+					await client.query(`INSERT INTO prest.availability (id_teacher, time_start, time_end)
+						VALUES ($1, $2, $3)`, [id_teacher, time_start, time_end]);
+				}
 			}
-			// Eliminar
+			// Eliminar las disponibilidades señaladas
 			for (var i = 0; i < delete_data.length; i++) {
 				// Verificar los datos
 				var time_start = new Date(delete_data[i].time_start);
@@ -91,6 +110,17 @@ module.exports = {
 				// Ejecutar el query
 				await client.query(`DELETE FROM prest.availability WHERE id_teacher = $1
 					AND time_start = $2 AND time_end = $3`, [id_teacher, time_start, time_end]);
+				// En caso de que se quiera repetir, eliminar hasta llegar al fin de ciclo
+				time_start.setDate(time_start.getDate() + 7);
+				time_end.setDate(time_end.getDate() + 7);
+				while (repeat) {
+					time_start.setDate(time_start.getDate() + 7);
+					time_end.setDate(time_end.getDate() + 7);
+					if (time_start > limit_day) break;
+					await client.query(`DELETE FROM prest.availability WHERE id_teacher = $1
+						AND time_start >= $2 AND time_end <= $3 AND available = TRUE`,
+						[id_teacher, time_start, time_end]);
+				}
 			}
 		}, (result) => {
 			res.status(200).send({ message: 'OK' });

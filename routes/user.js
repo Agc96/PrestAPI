@@ -54,7 +54,7 @@ module.exports = {
 					[id_university, name, phone, email, hash]);
 				// Obtener el id generado
 				const id_user = (user.rowCount > 0) ? user.rows[0].id_user : null;
-				if (!id_user) throw Exception('Bad user ID');
+				if (!id_user) throw 'Bad user ID';
 				// Generar una cadena aleatoria para confirmar el correo electrónico
 				const token = randomString(24);
 				await client.query(`INSERT INTO prest.pending_user (id_user, token) VALUES ($1, $2)`,

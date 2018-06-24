@@ -114,6 +114,9 @@ module.exports = {
 					VALUES ($1, $2, $3, $4)`, [id_teacher, advisory_time_start, advisory_time_end, false]);
 				await client.query(`INSERT INTO prest.availability (id_teacher, time_start, time_end, available)
 					VALUES ($1, $2, $3, $4)`, [id_teacher, advisory_time_end, availability_time_end, true]);
+				// Crear el chat respectivo
+				await client.query('INSERT INTO prest.chat (id_student, id_teacher) VALUES ($1, $2)',
+					[id_student, id_teacher]);
 			}
 		}, (result) => {
 			res.status(200).send({ message: 'OK' });

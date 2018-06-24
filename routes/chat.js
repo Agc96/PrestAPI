@@ -17,7 +17,17 @@ module.exports = {
 		});
 	},
 	messages: (req, res, next) => {
-		return next();
+		// Verificar los datos
+		var id_student = parseInt(req.params.id_student);
+		var id_teacher = parseInt(req.params.id_teacher);
+		if (isNaN(id_student) || isNaN(id_teacher)) return next();
+		// Ejecutar el query
+		db.query(`SELECT id_message, message, id_user = $1, created_at, has_attachment FROM prest.message
+				WHERE id_chat IN (SELECT id_chat FROM prest.chat WHERE id_student = $1 AND id_teacher = $2)`,
+				[id_student, id_teacher], (err, result) => {
+			if (err) return next(err);
+			res.status(200).send(result.rows);
+		});
 	},
 	send: (req, res, next) => {
 		return next();
