@@ -12,6 +12,9 @@ INSERT INTO prest.career (id_university, name) VALUES (1, 'Ingeniería Mecánica
 INSERT INTO prest.career (id_university, name) VALUES (1, 'Ingeniería Civil');
 INSERT INTO prest.career (id_university, name) VALUES (1, 'Ingeniería Electrónica');
 
+INSERT INTO prest.semester(id_university, name_semester, day_start, day_end) VALUES (1, '2018-1',
+	make_date(2018, 03, 12), make_date(2018, 07, 07));
+
 -- Cursos generales para Ingeniería
 INSERT INTO prest.course(id_university, name, code) VALUES (1, 'Fundamentos de Cálculo', '1MAT05');
 INSERT INTO prest.course(id_university, name, code) VALUES (1, 'Cálculo Diferencial', '1MAT06');
@@ -131,8 +134,14 @@ INSERT INTO prest.teacher_course (id_teacher, id_course) VALUES (483424269, 8);
 INSERT INTO prest.teacher_course (id_teacher, id_course) VALUES (483424269, 9);
 
 -- Disponibilidad de Miguel
-INSERT INTO prest.disponibility (id_teacher, id_course, day_of_week, hour_start, hour_end)
-VALUES (483424269, 7, 6, make_time(17, 0, 0), make_time(22, 0, 0));
+INSERT INTO prest.availability (id_teacher, time_start, time_end, available)
+VALUES (483424269, make_timestamptz(2018, 06, 15, 15, 0, 0), make_timestamptz(2018, 06, 15, 17, 0, 0), TRUE);
+INSERT INTO prest.availability (id_teacher, time_start, time_end, available)
+VALUES (483424269, make_timestamptz(2018, 06, 15, 17, 0, 0), make_timestamptz(2018, 06, 15, 19, 0, 0), FALSE);
+INSERT INTO prest.availability (id_teacher, time_start, time_end, available)
+VALUES (483424269, make_timestamptz(2018, 06, 15, 19, 0, 0), make_timestamptz(2018, 06, 15, 22, 0, 0), TRUE);
+INSERT INTO prest.availability (id_teacher, time_start, time_end, available)
+VALUES (483424269, make_timestamptz(2018, 06, 22, 15, 0, 0), make_timestamptz(2018, 06, 22, 22, 0, 0), TRUE);
 
 -- Formas de pago de Anthony
 INSERT INTO prest.payment_method (id_user, card_number, expiration, cvv)

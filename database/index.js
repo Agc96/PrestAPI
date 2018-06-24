@@ -28,6 +28,9 @@ module.exports = {
 		})().then(result => {
 			console.log('Transaction completed');
 			success(result);
+		}, err => {
+			console.error(err.stack);
+			next(err);
 		}).catch(err => {
 			console.error(err.stack);
 			next(err);

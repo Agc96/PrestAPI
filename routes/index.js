@@ -11,6 +11,7 @@ const teacher_course = require('./teacher_course');
 const advisory = require('./advisory');
 const availability = require('./availability');
 const payment_method = require('./payment_method');
+const chat = require('./chat');
 const confirm = require('./confirm');
 
 module.exports = function (app) {
@@ -60,13 +61,11 @@ module.exports = function (app) {
 	app.put('/student/:id_student/advisory/:id_advisory/score', advisory.score); // OK
 
 	// Ver disponibilidad de horarios de profesores como alumno
-	app.get('/course/:id_course/availability', availability.getStudent);
+	app.get('/course/:id_course/availability', availability.student);
 	// Ver disponibilidad de horarios para un profesor
-	app.get('/teacher/:id_teacher/availability', availability.getTeacher);
-	// Guardar disponibilidad de horarios para un profesor
+	app.get('/teacher/:id_teacher/availability', availability.teacher);
+	// Actualizar disponibilidad de horarios para un profesor
 	app.post('/teacher/:id_teacher/availability', availability.set);
-	// Desactivar disponibilidad de horarios para un profesor
-	app.delete('/teacher/:id_teacher/availability/:id_availability', availability.delete);
 
 	// Obtener métodos de pago de un usuario
 	app.get('/user/:id_user/payment', payment_method.get); // OK
@@ -76,7 +75,9 @@ module.exports = function (app) {
 	app.delete('/user/:id_user/payment/:id_payment_method', payment_method.delete); // OK
 
 	// Obtener conversaciones de un usuario
-	// app.get('/user/:id_user/chat');
+	app.get('/user/:id_user/chat', chat.get);
+	// Obtener lista de mensajes de un chat
+	app.get('/user/:id_user/chat/:id_other_user', chat.messages);
 
 	// Confirmación con correo electrónico
 	app.get('/confirm', confirm.confirm); // OK

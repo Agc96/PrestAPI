@@ -11,6 +11,15 @@ CREATE TABLE prest.university(
 	active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+CREATE TABLE prest.semester(
+	id_semester SERIAL PRIMARY KEY,
+	id_university INTEGER NOT NULL REFERENCES prest.university,
+	name_semester VARCHAR NOT NULL,
+	day_start DATE NOT NULL,
+	day_end DATE NOT NULL,
+	active BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 CREATE TABLE prest.career(
 	id_career SERIAL PRIMARY KEY,
 	id_university INTEGER NOT NULL REFERENCES prest.university,
@@ -125,18 +134,24 @@ CREATE TABLE prest.advisory_topic(
 	topic VARCHAR NOT NULL
 );
 
-CREATE TABLE prest.disponibility(
-	id_disponibility SERIAL PRIMARY KEY,
+CREATE TABLE prest.availability(
+	id_availability SERIAL PRIMARY KEY,
 	id_teacher INTEGER NOT NULL REFERENCES prest.teacher,
-	id_course INTEGER NOT NULL REFERENCES prest.course,
-	day_of_week SMALLINT NOT NULL,
-	hour_start TIME NOT NULL,
-	hour_end TIME NOT NULL,
-	active BOOLEAN NOT NULL DEFAULT TRUE
+	time_start TIMESTAMP WITH TIME ZONE NOT NULL,
+	time_end TIMESTAMP WITH TIME ZONE NOT NULL,
+	available BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE prest.chat(
 	id_chat SERIAL PRIMARY KEY,
 	id_student INTEGER NOT NULL REFERENCES prest.student,
 	id_teacher INTEGER NOT NULL REFERENCES prest.teacher
+);
+
+CREATE TABLE prest.message(
+	id_message SERIAL PRIMARY KEY,
+	id_user INTEGER NOT NULL REFERENCES prest.user,
+	message VARCHAR(100) NOT NULL,
+	created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+	has_attachment BOOLEAN NOT NULL DEFAULT FALSE
 );
